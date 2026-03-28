@@ -9,12 +9,9 @@ COPY . .
 RUN pnpm build
 
 FROM node:22-alpine AS production
-RUN corepack enable
+RUN npm install -g serve
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-COPY vite.config.ts ./
-COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["serve", "dist", "-l", "3000", "-s"]
